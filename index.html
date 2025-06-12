@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Kill Chain</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .kill-chain {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .phase {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .phase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--phase-color);
+        }
+
+        .phase.phase-1 { --phase-color: #ff6b6b; }
+        .phase.phase-2 { --phase-color: #4ecdc4; }
+        .phase.phase-3 { --phase-color: #45b7d1; }
+        .phase.phase-4 { --phase-color: #f9ca24; }
+        .phase.phase-5 { --phase-color: #f0932b; }
+        .phase.phase-6 { --phase-color: #eb4d4b; }
+        .phase.phase-7 { --phase-color: #6c5ce7; }
+
+        .phase-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--phase-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .phase-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-right: 60px;
+        }
+
+        .examples, .defenses {
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .examples .section-title::before {
+            content: "⚔️";
+        }
+
+        .defenses .section-title::before {
+            content: "🛡️";
+        }
+
+        .item-list {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .item-list li {
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 15px;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .item-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--phase-color);
+            font-weight: bold;
+        }
+
+        .flow-arrows {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: rgba(255,255,255,0.8);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .legend {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .legend h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .legend-items {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .kill-chain {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+            
+            .phase {
+                padding: 20px;
+            }
+            
+            .phase-title {
+                font-size: 1.2rem;
+            }
+            
+            .legend-items {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .phase {
+                padding: 15px;
+            }
+            
+            .phase-number {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .phase-title {
+                font-size: 1.1rem;
+                padding-right: 50px;
+            }
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .definition {
+            font-style: italic;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 Cyber Kill Chain</h1>
+            <p>Modelo de las 7 fases de un ciberataque y sus defensas</p>
+        </div>
+
+        <div class="kill-chain">
+            <div class="phase phase-1">
+                <div class="phase-number">1</div>
+                <div class="phase-title">Reconocimiento</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>Análisis de redes sociales</li>
+                        <li>Análisis de DNS</li>
+                        <li>Escaneo de puertos</li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Limitar información pública</li>
+                        <li>Firewall configurado</li>
+                        <li>Educación de empleados</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase phase-2">
+                <div class="phase-number">2</div>
+                <div class="phase-title">Armamentización</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>Virus</li>
+                        <li>Archivos PDF infectados</li>
+                        <li>Troyanos personalizados</li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Análisis de amenazas</li>
+                        <li>Sandboxing <div class="definition">Ejecución en entorno aislado</div></li>
+                        <li>Inteligencia de amenazas</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase phase-3">
+                <div class="phase-number">3</div>
+                <div class="phase-title">Entrega</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>Emails de phishing</li>
+                        <li>Sitios web comprometidos</li>
+                        <li>USB drops</li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Filtros de email</li>
+                        <li>Políticas USB</li>
+                        <li>Análisis de archivos</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase phase-4">
+                <div class="phase-number">4</div>
+                <div class="phase-title">Explotación</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>SQL injection <div class="definition">Manipulación de bases de datos</div></li>
+                        <li>Exploits de navegador</li>
+                        <li>Vulnerabilidades de OS</li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Parcheo regular</li>
+                        <li>Sandboxing</li>
+                        <li>Application whitelisting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase phase-5">
+                <div class="phase-number">5</div>
+                <div class="phase-title">Instalación</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>Backdoors <div class="definition">Acceso remoto oculto</div></li>
+                        <li>Rootkits <div class="definition">Acceso oculto y manipulación</div></li>
+                        <li>Servicios maliciosos</li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Antivirus</li>
+                        <li>Monitoreo (registros, procesos)</li>
+                        <li>Boot Security <div class="definition">Verificación durante arranque</div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase phase-6">
+                <div class="phase-number">6</div>
+                <div class="phase-title">Comando y Control</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>P2P networks <div class="definition">Redes peer-to-peer sin servidor central</div></li>
+                        <li>DNS tunneling <div class="definition">Transmisión de datos vía DNS</div></li>
+                        <li>IRC networks <div class="definition">Comunicación instantánea</div></li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Monitoreo de red</li>
+                        <li>Análisis de comportamiento</li>
+                        <li>DNS filtering <div class="definition">Bloqueo de sitios web maliciosos</div></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="phase phase-7">
+                <div class="phase-number">7</div>
+                <div class="phase-title">Acciones sobre Objetivos</div>
+                <div class="examples">
+                    <div class="section-title">Ejemplos de Ataque</div>
+                    <ul class="item-list">
+                        <li>Robo de datos</li>
+                        <li>Sabotaje de sistemas</li>
+                        <li>Espionaje industrial</li>
+                    </ul>
+                </div>
+                <div class="defenses">
+                    <div class="section-title">Defensas</div>
+                    <ul class="item-list">
+                        <li>Segmentación de red</li>
+                        <li>Respuesta de incidentes</li>
+                        <li>Backup y recovery</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <h3>Leyenda</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <span>⚔️</span>
+                    <span>Técnicas de Ataque</span>
+                </div>
+                <div class="legend-item">
+                    <span>🛡️</span>
+                    <span>Medidas Defensivas</span>
+                </div>
+                <div class="legend-item">
+                    <span style="color: #7f8c8d;">Cursiva</span>
+                    <span>Definiciones</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Agregar efectos de hover y animaciones
+        document.querySelectorAll('.phase').forEach((phase, index) => {
+            phase.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            phase.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+            
+            // Animación de entrada escalonada
+            setTimeout(() => {
+                phase.style.opacity = '1';
+                phase.style.transform = 'translateY(0)';
+            }, index * 150);
+        });
+
+        // Inicializar con opacidad 0 para la animación
+        document.querySelectorAll('.phase').forEach(phase => {
+            phase.style.opacity = '0';
+            phase.style.transform = 'translateY(20px)';
+            phase.style.transition = 'all 0.6s ease';
+        });
+    </script>
+</body>
+</html>
